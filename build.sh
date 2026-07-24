@@ -6,6 +6,17 @@ VERSION=latest
 DOCKER_USER=kenshaw
 DOCKER_PASSFILE=$HOME/.config/headless-shell/token
 
+PUSH=0
+
+OPTIND=1
+while getopts "p" opt; do
+case "$opt" in
+  p) PUSH=1 ;;
+esac
+done
+
+set -e
+
 for TARGET in amd64 arm64; do
   IMG="localhost/$(basename "$IMAGE"):${VERSION}-${TARGET}"
   echo -e "BUILDING ${TAG} ($(date))"
@@ -40,19 +51,21 @@ for TARGET in amd64 arm64; do
   )
 done
 
-REPO=$(sed -e 's%^docker\.io/%%' <<< "$IMAGE")
+if [ $PUSH -eq 1 ]; then
+  REPO=$(sed -e 's%^docker\.io/%%' <<< "$IMAGE")
 
-echo -e "\n\nPUSHING MANIFEST $NAME --> ${IMAGE}:${VERSION} ($(date))"
+  echo -e "\n\nPUSHING MANIFEST $NAME --> ${IMAGE}:${VERSION} ($(date))"
 
-(set -x;
-  buildah login docker.io \
-    --username $DOCKER_USER \
-    --password-stdin < $DOCKER_PASSFILE
-)
+  (set -x;
+    buildah login docker.io \
+      --username $DOCKER_USER \
+      --password-stdin < $DOCKER_PASSFILE
+  )
 
-(set -x;
-  buildah manifest push \
-    --all \
-    $NAME \
-    docker://$REPO:$VERSION
-)
+  (set -x;
+    buildah manifest push \
+      --all \
+      $NAME \
+      docker://$REPO:$VERSION
+  )
+fi

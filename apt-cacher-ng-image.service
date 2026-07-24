@@ -1,0 +1,5 @@
+[Unit]
+Description="build apt-cacher-ng image"
+
+[Service]
+ExecStart=/home/user/src/apt-cacher-ng/build.sh -p

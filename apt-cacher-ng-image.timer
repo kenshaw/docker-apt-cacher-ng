@@ -1,0 +1,9 @@
+[Unit]
+Description="build apt-cacher-ng image daily at 12:05am"
+
+[Timer]
+OnCalendar=*-*-* 00:05:00
+Unit=apt-cacher-ng-image.service
+
+[Install]
+WantedBy=timers.target
