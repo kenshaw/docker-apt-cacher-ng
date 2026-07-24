@@ -2,21 +2,27 @@
 set -e
 
 create_pid_dir() {
-  mkdir -p /run/apt-cacher-ng
-  chmod -R 0755 /run/apt-cacher-ng
-  chown ${APT_CACHER_NG_USER}:${APT_CACHER_NG_USER} /run/apt-cacher-ng
+  (set -x;
+    mkdir -p /run/apt-cacher-ng
+    chmod -R 0755 /run/apt-cacher-ng
+    chown ${APT_CACHER_NG_USER}:${APT_CACHER_NG_USER} /run/apt-cacher-ng
+  )
 }
 
 create_cache_dir() {
-  mkdir -p ${APT_CACHER_NG_CACHE_DIR}
-  chmod -R 0755 ${APT_CACHER_NG_CACHE_DIR}
-  chown -R ${APT_CACHER_NG_USER}:root ${APT_CACHER_NG_CACHE_DIR}
+  (set -x;
+    mkdir -p ${APT_CACHER_NG_CACHE_DIR}
+    chmod -R 0755 ${APT_CACHER_NG_CACHE_DIR}
+    chown -R ${APT_CACHER_NG_USER}:root ${APT_CACHER_NG_CACHE_DIR}
+  )
 }
 
 create_log_dir() {
-  mkdir -p ${APT_CACHER_NG_LOG_DIR}
-  chmod -R 0755 ${APT_CACHER_NG_LOG_DIR}
-  chown -R ${APT_CACHER_NG_USER}:${APT_CACHER_NG_USER} ${APT_CACHER_NG_LOG_DIR}
+  (set -x;
+    mkdir -p ${APT_CACHER_NG_LOG_DIR}
+    chmod -R 0755 ${APT_CACHER_NG_LOG_DIR}
+    chown -R ${APT_CACHER_NG_USER}:${APT_CACHER_NG_USER} ${APT_CACHER_NG_LOG_DIR}
+  )
 }
 
 create_pid_dir
@@ -34,8 +40,12 @@ fi
 
 # default behaviour is to launch apt-cacher-ng
 if [[ -z ${1} ]]; then
-  exec start-stop-daemon --start --chuid ${APT_CACHER_NG_USER}:${APT_CACHER_NG_USER} \
-    --exec "$(command -v apt-cacher-ng)" -- -c /etc/apt-cacher-ng ${EXTRA_ARGS}
+  (set -x;
+    exec start-stop-daemon --start --chuid ${APT_CACHER_NG_USER}:${APT_CACHER_NG_USER} \
+      --exec "$(command -v apt-cacher-ng)" -- -c /etc/apt-cacher-ng ForeGround=1 "PassThroughPattern=.*" ${EXTRA_ARGS}
+  )
 else
-  exec "$@"
+  (set -x;
+    exec "$@"
+  )
 fi

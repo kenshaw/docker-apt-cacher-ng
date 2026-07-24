@@ -13,16 +13,14 @@ RUN apt-get update \
      ca-certificates \
      wget \
      dpkg \
- && echo "ForeGround: 0" >> /etc/apt-cacher-ng/zzz_override.conf \
- && echo "PassThroughPattern: .*" >> /etc/apt-cacher-ng/zzz_override.conf \
  && rm -rf /var/lib/apt/lists/*
 
-COPY entrypoint.sh /sbin/entrypoint.sh
+COPY entrypoint.sh /
 
-RUN chmod 755 /sbin/entrypoint.sh
+RUN chmod 755 /entrypoint.sh
 
 EXPOSE 3142/tcp
 
-ENTRYPOINT ["/sbin/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
 
 CMD ["/usr/sbin/apt-cacher-ng"]
