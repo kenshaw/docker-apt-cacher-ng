@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+SRC=$(realpath $(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd))
+
 IMAGE=docker.io/kenshaw/apt-cacher-ng
 VERSION=latest
 
@@ -23,7 +25,8 @@ for TARGET in amd64 arm64; do
   (set -x;
     buildah build \
       --platform linux/${TARGET} \
-      --tag ${IMG} .
+      --tag ${IMG} \
+      $SRC
   )
 done
 
