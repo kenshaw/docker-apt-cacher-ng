@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  apt-cacher-ng:
+    restart: always
+    image: docker.io/kenshaw/apt-cacher-ng:latest
+    init: true
+    ports:
+      - 3142:3142
+    volumes:
+      - ./volumes/apt-cacher-ng:/var/cache/apt-cacher-ng
