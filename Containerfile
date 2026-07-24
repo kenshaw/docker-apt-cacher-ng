@@ -8,7 +8,11 @@ ENV \
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive \
    apt-get install \
-     --no-install-recommends -y apt-cacher-ng ca-certificates wget \
+     --no-install-recommends -y \
+     apt-cacher-ng \
+     ca-certificates \
+     wget \
+     dpkg \
  && echo "ForeGround: 0" >> /etc/apt-cacher-ng/zzz_override.conf \
  && echo "PassThroughPattern: .*" >> /etc/apt-cacher-ng/zzz_override.conf \
  && rm -rf /var/lib/apt/lists/*
